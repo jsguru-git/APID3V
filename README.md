@@ -22,6 +22,38 @@ If this is your first run, then after containers are up and ready, run the next 
 docker-compose run --rm app ./build-deploy/first-run.sh
 ```
 
+## for ubuntu
+```bash
+apt update
+apt-get install docker -y
+apt-get install docker.io -y
+apt-get install docker-compose -y
+apt-get install nginx -y
+
+sysctl -w vm.max_map_count=262144
+
+cd /root
+mkdir api
+cd api
+git clone https://repo/ .
+
+docker-compose up -d
+    -> may have to run /etc/init.d/nginx stop incase port 80 already in use
+
+#check all running:
+docker-compose ps
+
+docker container exec -it app bash
+head /etc/nginx/nginx.conf # to find out the web user (may be www-data)
+chown -R nginx:nginx .
+chmod -R 777 storage
+chmod -Rf 777 /var/www/app/storage/logs
+chmod -Rf 777 /var/www/app/storage/framework/views/
+chmod -Rf 777 /var/www/app/storage/framework/sessions/
+chmod -Rf 777 /var/www/app/storage/framework/cache/
+sh ./build-deploy/first-run.sh
+```
+
 # Stop
 
 You can stop containers by typing `Cmd + C` on Mac or `Ctrl + C` on Windows/Linux. 
